@@ -13,7 +13,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Start playing Wordle!
+          Start playing Wordle Clone!
         </a>
       </header>
     </div>
