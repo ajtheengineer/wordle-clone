@@ -18,6 +18,7 @@ function App() {
   const [currentWord, setCurrentWord] = useState("")
   const [guessedWords, setGuessedWords] = useState([])
   const [pressedKey, setPressedKey] = useState("")
+  const [flashMessage, setFlashMessage] = useState(null)
 
   const onKeyPress = (key) => {
     setPressedKey(key);
@@ -55,6 +56,7 @@ function App() {
     // ---- if current word is not in the dictionary, show "not in word list"
     if (pressedKey === "ENTER") {
       if (currentWord.length < width) {
+        flash("Not enough letters!")
         console.log("Not enough letters!")
       } else {
         if (validEnglishWords.includes(currentWord)) {
@@ -62,12 +64,20 @@ function App() {
           setGuessedWords(guessedWords.concat(currentWord))
           setCurrentWord("")
         } else {
+          flash("Not in word list")
           console.log("not in word list")
         }
       }
     }
     setPressedKey("")
   }, [pressedKey])
+
+  const flash = (message) => {
+    setFlashMessage(message);
+    setTimeout(() => {
+      setFlashMessage(null)
+    }, 1000) // Show it for 1000 seconds.
+  }
 
   const getContent = () => {
     const objectToReturn = {}
@@ -107,6 +117,7 @@ function App() {
       <Header />
       {userWon && <div className="winner"> You win! </div>}
       {userLost && <div className="loser"> You lost! </div>}
+      {flashMessage != null && <div className="flash">{flashMessage}</div>}
       <Grid
         width={width}
         height={height}
