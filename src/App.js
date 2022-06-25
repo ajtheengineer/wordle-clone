@@ -2,23 +2,27 @@ import './app.css';
 import Grid from './components/grid.js';
 import Header from './components/header.js';
 import KeyBoard from './components/keyboard.js'
+import ALL_ENGLISH_WORDS from './components/english.json';
 import { useState, useEffect } from 'react';
 
 function App() {
-  const ALL_ENGLISH_WORDS = ["MATCH", "PATCH", "TOUCH", "GREEN", "BLUES"]
-  const [mysteryWord, setMysteryWord] = useState("MATCH")
+  const width = 6
+  const height = 5
+  const validEnglishWords = Object.keys(ALL_ENGLISH_WORDS)
+    .filter((word) => (word.length === width))
+    .map((word) => word.toUpperCase())
+  const [mysteryWord, setMysteryWord] = useState(
+    validEnglishWords[Math.floor(Math.random()*(validEnglishWords.length))]
+  )
   const [currentRow, setCurrentRow] = useState(0)
   const [currentWord, setCurrentWord] = useState("")
   const [guessedWords, setGuessedWords] = useState([])
   const [pressedKey, setPressedKey] = useState("")
-  const width = 5
-  const height = 6
 
   const onKeyPress = (key) => {
     setPressedKey(key);
   }
 
-  // Whenever pressedKey is updated, update the currentWord/currentRow/etc
   useEffect(() => {
     if (pressedKey === "") {
       return;
@@ -53,7 +57,7 @@ function App() {
       if (currentWord.length < width) {
         console.log("Not enough letters!")
       } else {
-        if (ALL_ENGLISH_WORDS.includes(currentWord)) {
+        if (validEnglishWords.includes(currentWord)) {
           setCurrentRow(currentRow + 1)
           setGuessedWords(guessedWords.concat(currentWord))
           setCurrentWord("")
