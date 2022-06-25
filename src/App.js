@@ -1,4 +1,4 @@
-import './app.css';
+import './app.scss';
 import Grid from './components/grid.js';
 import Header from './components/header.js';
 import KeyBoard from './components/keyboard.js'
