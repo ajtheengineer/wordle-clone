@@ -2,16 +2,115 @@ import './app.css';
 import Grid from './components/grid.js';
 import Header from './components/header.js';
 import KeyBoard from './components/keyboard.js'
+import { useState, useEffect } from 'react';
 
 function App() {
+  const ALL_ENGLISH_WORDS = ["MATCH", "PATCH", "TOUCH", "GREEN", "BLUES"]
+  const [mysteryWord, setMysteryWord] = useState("MATCH")
+  const [currentRow, setCurrentRow] = useState(0)
+  const [currentWord, setCurrentWord] = useState("")
+  const [guessedWords, setGuessedWords] = useState([])
+  const [pressedKey, setPressedKey] = useState("")
   const width = 5
   const height = 6
 
+  const onKeyPress = (key) => {
+    setPressedKey(key);
+  }
+
+  // Whenever pressedKey is updated, update the currentWord/currentRow/etc
+  useEffect(() => {
+    if (pressedKey === "") {
+      return;
+    }
+    // If the pressed key is a letter
+    // - If current word is equal to the width, do nothing.
+    // - If current word is less than the width, add character to current word. 
+    if (pressedKey !== 'ENTER' && pressedKey !== 'BACKSPACE') {
+      if (currentWord === width) {
+        // no-op
+      } else {
+        setCurrentWord(currentWord + pressedKey)
+      }
+    }
+    
+    // If the pressed key is the backspace button
+    // - If current word is empty, do nothing.
+    // - If current word has at least one character, remove last character from current word.
+    if (pressedKey === "BACKSPACE") {
+      setCurrentWord(currentWord.slice(0, -1))
+    }
+
+    // If the pressed key is the enter button
+    // - If current word is not wide enough, show "not enough letters"
+    // - If current word is equal to the width:
+    // --- if current word is in the dictionary,
+            // increment the current ROW by 1,
+            // add the word to the guessedWords
+            // set currentWord to ""
+    // ---- if current word is not in the dictionary, show "not in word list"
+    if (pressedKey === "ENTER") {
+      if (currentWord.length < width) {
+        console.log("Not enough letters!")
+      } else {
+        if (ALL_ENGLISH_WORDS.includes(currentWord)) {
+          setCurrentRow(currentRow + 1)
+          setGuessedWords(guessedWords.concat(currentWord))
+          setCurrentWord("")
+        } else {
+          console.log("not in word list")
+        }
+      }
+    }
+    setPressedKey("")
+  }, [pressedKey])
+
+  const getContent = () => {
+    const objectToReturn = {}
+    for (let currentWordIndex = 0; currentWordIndex < currentWord.length; currentWordIndex++) {
+      objectToReturn[`${currentRow},${currentWordIndex}`] = {
+        color: 'black',
+        text: currentWord[currentWordIndex]
+      }
+    }
+    guessedWords.forEach((guessedWord, rowNumber) => {
+      for (let guessedWordIndex = 0; guessedWordIndex < guessedWord.length; guessedWordIndex++) {
+        const gridRowNumber = rowNumber
+        const gridColumnNumber = guessedWordIndex
+        const character = guessedWord[guessedWordIndex]
+        let color; 
+        if (!mysteryWord.includes(character)) {
+          color = "grey"
+        } else if (mysteryWord[guessedWordIndex] === character) {
+          color = "green"
+        } else {
+          color = "yellow"
+        }
+        objectToReturn[`${gridRowNumber},${gridColumnNumber}`] = {
+          color: color,
+          text: character
+        }
+      }
+    })
+
+    return objectToReturn;
+  }
+
+  const userWon = guessedWords.includes(mysteryWord)
+  const userLost = !guessedWords.includes(mysteryWord) && guessedWords.length === height
   return (
     <div className="app-container">
       <Header />
-      <Grid width={width} height={height} />
-      <KeyBoard />
+      {userWon && <div className="winner"> You win! </div>}
+      {userLost && <div className="loser"> You lost! </div>}
+      <Grid
+        width={width}
+        height={height}
+        content={getContent()}
+        />
+      <KeyBoard 
+        onKeyPress={(key) => onKeyPress(key)}
+      />
     </div>
   );
 }
