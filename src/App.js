@@ -2,7 +2,7 @@ import './app.scss';
 import Grid from './components/grid.js';
 import Header from './components/header.js';
 import KeyBoard from './components/keyboard.js'
-import ALL_ENGLISH_WORDS from './components/english.json';
+ALL_ENGLISH_WORDS = {"REACT": 1, "TOUCH": 2}
 import { useState, useEffect } from 'react';
 
 function App() {
