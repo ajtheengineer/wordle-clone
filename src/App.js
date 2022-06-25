@@ -2,12 +2,12 @@ import './app.scss';
 import Grid from './components/grid.js';
 import Header from './components/header.js';
 import KeyBoard from './components/keyboard.js'
-const ALL_ENGLISH_WORDS = {"REACT": 1, "TOUCH": 2}
 import { useState, useEffect } from 'react';
 
 function App() {
   const width = 6
   const height = 5
+  const ALL_ENGLISH_WORDS = {"react": 1, "touch": 2}
   const validEnglishWords = Object.keys(ALL_ENGLISH_WORDS)
     .filter((word) => (word.length === width))
     .map((word) => word.toUpperCase())
