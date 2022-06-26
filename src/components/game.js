@@ -26,20 +26,13 @@ export default function Game(props) {
 
   useEffect(() => {
     const config = getLanguageConfigs()[language]
-    fetch("english.json", {
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        const validWords = Object.keys(data).filter(word => word.length == width)
-          .map(word => word.toUpperCase())
-        setValidWords(validWords)
-        setMysteryWord(validWords[Math.floor(Math.random()*validWords.length)])
-        setKeyboard(config.keyboard)
-      })
+    const validWords =
+      Object.keys(config.getWords())
+        .filter(word => word.length == width)
+        .map(word => word.toUpperCase())
+    setValidWords(validWords)
+    setMysteryWord(validWords[Math.floor(Math.random()*validWords.length)])
+    setKeyboard(config.keyboard)
   }, [])
 
   useEffect(() => {
