@@ -1,5 +1,3 @@
-import getEnglishWords from '../components/english'
-
 export default function getLanguageConfigs() {
   return {
     "English": {
@@ -8,7 +6,7 @@ export default function getLanguageConfigs() {
         ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
         ["ENTER", "Z", "C", "V", "B", "N", "M", "BACKSPACE"]
       ],
-      getWords: () => getEnglishWords()
+      wordsUrl: "./english.json"
     }
   }
 }
